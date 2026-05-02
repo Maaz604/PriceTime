@@ -14,6 +14,9 @@ function createLabel(formatted, isExpensive) {
 function injectIntoTextNode(textNode) {
   const parent = textNode.parentNode;
   if (!parent || parent.tagName === 'SCRIPT' || parent.tagName === 'STYLE') return;
+  if (parent.isContentEditable) return;
+  if (parent.closest('input, textarea, select, [contenteditable]')) return;
+  if (parent.closest(`.${LABEL_CLASS}`)) return;
   if (parent.hasAttribute(INJECTED_ATTR)) return;
 
   const text = textNode.nodeValue;
@@ -42,10 +45,12 @@ function injectIntoTextNode(textNode) {
   parent.replaceChild(fragment, textNode);
 }
 
-function getTextNodes(root) {
+function getVisibleTextNodes(root) {
   const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
     acceptNode(node) {
-      const tag = node.parentNode?.tagName;
+      const parent = node.parentNode;
+      if (!parent) return NodeFilter.FILTER_REJECT;
+      const tag = parent.tagName;
       if (['SCRIPT', 'STYLE', 'NOSCRIPT', 'HEAD'].includes(tag)) return NodeFilter.FILTER_REJECT;
       if (!node.nodeValue.trim()) return NodeFilter.FILTER_SKIP;
       return NodeFilter.FILTER_ACCEPT;
@@ -66,5 +71,10 @@ function injectStylesheet() {
   document.head.appendChild(style);
 }
 
+function scanAndInject(root = document.body) {
+  if (!userSettings.enabled) return;
+  getVisibleTextNodes(root).forEach(injectIntoTextNode);
+}
+
 injectStylesheet();
-getTextNodes(document.body).forEach(injectIntoTextNode);
+scanAndInject();
