@@ -76,5 +76,22 @@ function scanAndInject(root = document.body) {
   getVisibleTextNodes(root).forEach(injectIntoTextNode);
 }
 
+let observer = null;
+
+function startObserver() {
+  if (observer) return;
+  observer = new MutationObserver((mutations) => {
+    if (!userSettings.enabled) return;
+    for (const mutation of mutations) {
+      for (const node of mutation.addedNodes) {
+        if (node.nodeType === Node.TEXT_NODE) injectIntoTextNode(node);
+        else if (node.nodeType === Node.ELEMENT_NODE) scanAndInject(node);
+      }
+    }
+  });
+  observer.observe(document.body, { childList: true, subtree: true });
+}
+
 injectStylesheet();
 scanAndInject();
+startObserver();
