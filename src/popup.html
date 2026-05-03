@@ -12,51 +12,29 @@
         <h1 class="popup__title">Price to Time</h1>
         <label class="toggle" title="Enable or disable the extension">
           <input type="checkbox" id="enabledToggle" />
-          <span class="toggle__track">
-            <span class="toggle__thumb"></span>
-          </span>
+          <span class="toggle__track"><span class="toggle__thumb"></span></span>
         </label>
       </header>
-
       <main class="popup__body" id="mainBody">
         <div class="field">
           <label class="field__label" for="wageInput">Hourly wage</label>
           <div class="field__input-wrap">
             <span class="field__prefix">$</span>
-            <input
-              type="number"
-              id="wageInput"
-              class="field__input"
-              min="1"
-              max="10000"
-              step="0.5"
-              placeholder="20"
-            />
+            <input type="number" id="wageInput" class="field__input" min="1" max="10000" step="0.5" placeholder="20" />
             <span class="field__suffix">/ hr</span>
           </div>
         </div>
-
         <div class="field">
           <label class="field__label" for="thresholdInput">
             Highlight threshold
             <span class="field__hint">hours before marking as expensive</span>
           </label>
           <div class="field__input-wrap">
-            <input
-              type="number"
-              id="thresholdInput"
-              class="field__input field__input--short"
-              min="1"
-              max="10000"
-              step="1"
-              placeholder="8"
-            />
+            <input type="number" id="thresholdInput" class="field__input field__input--short" min="1" max="10000" step="1" placeholder="8" />
             <span class="field__suffix">hrs</span>
           </div>
         </div>
-
         <button class="save-btn" id="saveBtn">Save settings</button>
-
         <p class="status" id="statusMsg" aria-live="polite"></p>
       </main>
     </div>
