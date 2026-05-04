@@ -20,6 +20,17 @@ function createLabel(formatted, isExpensive) {
   return span;
 }
 
+function isInsideThumbnailCard(element) {
+  let el = element.parentElement;
+  for (let i = 0; i < 6; i++) {
+    if (!el || el === document.body) break;
+    const rect = el.getBoundingClientRect();
+    if (rect.width > 0 && rect.width < 140 && el.querySelector('img')) return true;
+    el = el.parentElement;
+  }
+  return false;
+}
+
 function injectIntoTextNode(textNode) {
   const parent = textNode.parentNode;
   if (!parent || parent.tagName === 'SCRIPT' || parent.tagName === 'STYLE') return;
@@ -27,6 +38,7 @@ function injectIntoTextNode(textNode) {
   if (parent.closest('input, textarea, select, [contenteditable]')) return;
   if (parent.closest(`.${LABEL_CLASS}`)) return;
   if (parent.hasAttribute(INJECTED_ATTR)) return;
+  if (isInsideThumbnailCard(parent)) return;
 
   const text = textNode.nodeValue;
   const prices = parsePriceString(text);
