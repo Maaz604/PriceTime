@@ -1,7 +1,16 @@
 const INJECTED_ATTR = 'data-ptt-injected';
 const LABEL_CLASS = 'ptt-label';
 
-const userSettings = { hourlyWage: 20, enabled: true, highlightThreshold: 8 };
+let userSettings = { hourlyWage: 20, enabled: true, highlightThreshold: 8 };
+
+function loadSettings(callback) {
+  chrome.storage.sync.get(['hourlyWage', 'enabled', 'highlightThreshold'], (stored) => {
+    if (stored.hourlyWage !== undefined) userSettings.hourlyWage = stored.hourlyWage;
+    if (stored.enabled !== undefined) userSettings.enabled = stored.enabled;
+    if (stored.highlightThreshold !== undefined) userSettings.highlightThreshold = stored.highlightThreshold;
+    callback();
+  });
+}
 
 function createLabel(formatted, isExpensive) {
   const span = document.createElement('span');
@@ -76,6 +85,11 @@ function scanAndInject(root = document.body) {
   getVisibleTextNodes(root).forEach(injectIntoTextNode);
 }
 
+function removeAllLabels() {
+  document.querySelectorAll(`.${LABEL_CLASS}`).forEach((el) => el.remove());
+  document.querySelectorAll(`[${INJECTED_ATTR}]`).forEach((el) => el.removeAttribute(INJECTED_ATTR));
+}
+
 let observer = null;
 
 function startObserver() {
@@ -92,6 +106,16 @@ function startObserver() {
   observer.observe(document.body, { childList: true, subtree: true });
 }
 
-injectStylesheet();
-scanAndInject();
-startObserver();
+chrome.storage.onChanged.addListener((changes) => {
+  if ('hourlyWage' in changes) userSettings.hourlyWage = changes.hourlyWage.newValue;
+  if ('highlightThreshold' in changes) userSettings.highlightThreshold = changes.highlightThreshold.newValue;
+  if ('enabled' in changes) userSettings.enabled = changes.enabled.newValue;
+  removeAllLabels();
+  if (userSettings.enabled) scanAndInject();
+});
+
+loadSettings(() => {
+  injectStylesheet();
+  scanAndInject();
+  startObserver();
+});
