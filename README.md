@@ -39,25 +39,25 @@ It is difficult to fully visualize a pricetag on an item purely based on the num
 
 ### Price conversion on a product page
 
-```
-!\\\[Product page example](./screenshots/product-page.png)
-```
+
+![Product page example](./screenshots/product-page.png)
+
 
 ### Extension popup UI
 
 
 
-```
-!\\\[Popup UI](./screenshots/popup.png)
-```
+
+![Popup UI](./screenshots/popup.png)
+
 
 ### Expensive item highlight
 
 
 
-```
-!\\\[Expensive item highlight](./screenshots/highlight.png)
-```
+
+![Expensive item highlight](./screenshots/highlight.png)
+
 
 \---
 
@@ -85,7 +85,7 @@ After installing, the extension runs automatically on every webpage. Prices will
 To configure:
 
 * Click the extension icon to open the popup
-* Enter your hourly wage 
+* Enter your hourly wage
 * Adjust the highlight threshold if desired — this controls how many hours of work triggers the red emphasis
 * Toggle the extension off temporarily without losing your settings
 
